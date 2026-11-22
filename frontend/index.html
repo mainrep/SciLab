@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#172033">
+  <meta name="description" content="Explore the Physics behind everyday objects with AI Science Lab.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Science Lab">
+  <title>AI Science Lab — Discover the science around you</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="AI Science Lab home">
+      <span class="brand-mark" aria-hidden="true">✳</span>
+      <span>AI Science <strong>Lab</strong></span>
+    </a>
+    <div class="header-right">
+      <span id="connectionBadge" class="prototype-badge"><span class="status-dot"></span> AI connected when online</span>
+      <button id="installButton" class="install-button" type="button" hidden>Install app</button>
+    </div>
+  </header>
+
+  <main id="top" class="page-shell">
+    <section class="intro-section">
+      <div class="eyebrow">SCIENCE IS ALL AROUND YOU</div>
+      <h1>Look closer.<br><span>Discover the science.</span></h1>
+      <p class="intro-copy">Take a picture of something around you. Explore the Physics behind it, make a prediction, and test your understanding.</p>
+      <div class="prototype-note" role="note">
+        <strong>Learning tool, not an authority:</strong> AI explanations can contain mistakes. Use them as a starting point and check important scientific claims against trusted learning materials or a teacher.
+      </div>
+      <div id="offlineNotice" class="offline-notice" role="status" hidden>You are offline. The app shell can still open, but AI image analysis needs an internet connection.</div>
+    </section>
+
+    <section class="workspace" aria-labelledby="start-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STEP 01 · START WITH AN OBJECT</p>
+          <h2 id="start-heading">What would you like to investigate?</h2>
+        </div>
+        <span class="step-count">01 <span>/</span> 03</span>
+      </div>
+
+      <div class="input-grid">
+        <div class="upload-card">
+          <div class="card-topline">
+            <div>
+              <h3>Add a photo</h3>
+              <p class="muted">Take a new picture or choose one from your device.</p>
+            </div>
+            <span class="optional-label">OPTIONAL</span>
+          </div>
+
+          <div class="photo-actions">
+            <button id="takePhotoButton" class="photo-button" type="button">◎ Take a photo</button>
+            <button id="choosePhotoButton" class="photo-button secondary-photo" type="button">↑ Choose a photo</button>
+          </div>
+          <input id="cameraInput" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
+          <input id="galleryInput" class="visually-hidden" type="file" accept="image/png,image/jpeg,image/webp">
+
+          <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Choose an image or drag one here">
+            <div id="uploadPrompt" class="upload-prompt">
+              <span class="upload-icon" aria-hidden="true">＋</span>
+              <strong>Drop an image here</strong>
+              <span>or use one of the buttons above</span>
+              <small>JPG, PNG or WEBP · up to 5 MB</small>
+            </div>
+            <img id="imagePreview" class="image-preview" alt="Preview of the selected everyday object" hidden>
+          </div>
+          <div class="photo-footer">
+            <p id="imageMessage" class="muted">A clear photo of one everyday object works best.</p>
+            <button id="removeImageButton" class="text-button" type="button" hidden>Remove photo</button>
+          </div>
+        </div>
+
+        <div class="object-card">
+          <div class="card-topline">
+            <div>
+              <h3>Give us a little context</h3>
+              <p class="muted">You can describe the object or leave this blank if the photo is clear.</p>
+            </div>
+            <span class="optional-label">OPTIONAL</span>
+          </div>
+          <label class="field-label" for="objectInput">Object name or observation</label>
+          <input id="objectInput" class="object-input" type="text" maxlength="160" placeholder="e.g. a bicycle, especially its brakes" autocomplete="off">
+          <div class="example-block">
+            <span class="field-label">TRY A STARTING POINT</span>
+            <div class="sample-list">
+              <button class="sample-chip" type="button" data-object="Bicycle">Bicycle</button>
+              <button class="sample-chip" type="button" data-object="Guitar">Guitar</button>
+              <button class="sample-chip" type="button" data-object="Lamp">Lamp</button>
+              <button class="sample-chip" type="button" data-object="Ball">Ball</button>
+              <button class="sample-chip" type="button" data-object="Fan">Fan</button>
+            </div>
+          </div>
+          <label class="field-label level-label" for="learningLevel">Explanation level</label>
+          <select id="learningLevel" class="object-input">
+            <option value="early secondary (approximately ages 11–14)">Early secondary</option>
+            <option value="middle secondary (approximately ages 14–16)">Middle secondary</option>
+            <option value="introductory high-school Physics">Introductory high-school Physics</option>
+          </select>
+          <button id="analyzeButton" class="primary-button" type="button">
+            Explore this object <span aria-hidden="true">→</span>
+          </button>
+          <p id="inputMessage" class="input-message" role="status" aria-live="polite"></p>
+          <p class="privacy-note">Use photos of objects only. Avoid faces, people, documents, or images containing personal information. The selected image is sent to the AI service for analysis and is not saved by this app.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="loadingSection" class="loading-section" aria-live="polite" hidden>
+      <div class="loader" aria-hidden="true"></div>
+      <div>
+        <strong>Exploring the Physics...</strong>
+        <p id="loadingMessage">The AI is examining the object and preparing a learning pathway.</p>
+      </div>
+    </section>
+
+    <section id="resultsSection" class="results-section" aria-labelledby="resultsHeading" hidden>
+      <div class="section-heading results-heading">
+        <div>
+          <p class="eyebrow">STEP 02 · DISCOVER CONNECTIONS</p>
+          <h2 id="resultsHeading">The Physics behind your object</h2>
+          <p id="resultsSubheading" class="muted"></p>
+        </div>
+        <span class="step-count">02 <span>/</span> 03</span>
+      </div>
+
+      <div id="analysisNotice" class="analysis-notice" hidden></div>
+      <div id="conceptArea" class="discovery-layout" hidden>
+        <aside class="concept-sidebar">
+          <p class="sidebar-label">EXPLORE A CONCEPT</p>
+          <div id="conceptList" class="concept-list" aria-label="Physics concepts"></div>
+          <div class="sidebar-tip"><span aria-hidden="true">✦</span><p>Choose a concept to explore its explanation and challenge.</p></div>
+        </aside>
+
+        <div class="concept-content">
+          <div class="concept-kicker" id="conceptCategory">PHYSICS CONCEPT</div>
+          <h3 id="conceptTitle">Select a concept</h3>
+          <p id="conceptExplanation" class="concept-explanation"></p>
+          <div class="real-world-box">
+            <span class="box-icon" aria-hidden="true">◎</span>
+            <div>
+              <strong>Where can you see this?</strong>
+              <p id="conceptConnection"></p>
+            </div>
+          </div>
+          <div id="misconceptionBox" class="misconception-box" hidden>
+            <strong>A misconception to watch for</strong>
+            <p id="misconceptionText"></p>
+          </div>
+
+          <div class="challenge-card">
+            <div class="challenge-heading">
+              <div>
+                <p class="eyebrow">STEP 03 · THINK LIKE A SCIENTIST</p>
+                <h4>Make a prediction</h4>
+              </div>
+              <span class="challenge-icon" aria-hidden="true">?</span>
+            </div>
+            <p id="questionPrompt" class="question-prompt"></p>
+            <div id="answerOptions" class="answer-options"></div>
+            <button id="checkAnswerButton" class="secondary-button" type="button" disabled>Check my answer</button>
+            <div id="feedbackBox" class="feedback-box" aria-live="polite" hidden></div>
+          </div>
+
+          <div class="explore-next" id="exploreNext" hidden>
+            <span class="next-icon" aria-hidden="true">↗</span>
+            <div>
+              <strong>Go one step further</strong>
+              <p id="challengeText"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="results-actions">
+        <button id="resetButton" class="text-button" type="button">← Explore another object</button>
+      </div>
+    </section>
+
+    <div id="cameraPanel" class="camera-panel" role="dialog" aria-modal="true" aria-labelledby="cameraHeading" hidden>
+      <div class="camera-dialog">
+        <div class="camera-dialog-heading">
+          <div>
+            <p class="eyebrow">CAMERA</p>
+            <h2 id="cameraHeading">Take a picture</h2>
+          </div>
+          <button id="closeCameraButton" class="camera-close-button" type="button" aria-label="Close camera">×</button>
+        </div>
+        <video id="cameraVideo" class="camera-video" autoplay playsinline muted></video>
+        <canvas id="cameraCanvas" hidden></canvas>
+        <p id="cameraMessage" class="muted">Point the camera at one everyday object.</p>
+        <div class="camera-controls">
+          <button id="capturePhotoButton" class="primary-button" type="button">Capture photo</button>
+          <button id="cameraFallbackButton" class="photo-button secondary-photo" type="button">Use device camera picker</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <span>AI SCIENCE LAB</span>
+      <span>Learn by observing the world around you.</span>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
