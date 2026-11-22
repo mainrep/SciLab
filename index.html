@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Explore the Physics behind everyday objects with AI Science Lab.">
+  <title>AI Science Lab — Discover the science around you</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="AI Science Lab home">
+      <span class="brand-mark" aria-hidden="true">✳</span>
+      <span>AI Science <strong>Lab</strong></span>
+    </a>
+    <div class="header-right">
+      <span class="prototype-badge"><span class="status-dot"></span> Prototype v0.1</span>
+    </div>
+  </header>
+
+  <main id="top" class="page-shell">
+    <section class="intro-section">
+      <div class="eyebrow">SCIENCE IS ALL AROUND YOU</div>
+      <h1>Look closer.<br><span>Discover the science.</span></h1>
+      <p class="intro-copy">Choose an everyday object, explore the Physics behind it, and test your understanding with a short challenge.</p>
+      <div class="prototype-note" role="note">
+        <strong>Prototype mode:</strong> this first version uses a small set of curated Physics examples. Your image is previewed in the browser, but image recognition and live AI responses have not been connected yet.
+      </div>
+    </section>
+
+    <section class="workspace" aria-labelledby="start-heading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">STEP 01 · START WITH AN OBJECT</p>
+          <h2 id="start-heading">What would you like to investigate?</h2>
+        </div>
+        <span class="step-count">01 <span>/</span> 03</span>
+      </div>
+
+      <div class="input-grid">
+        <div class="upload-card">
+          <div class="card-topline">
+            <div>
+              <h3>Add a photo</h3>
+              <p class="muted">A picture of an everyday object</p>
+            </div>
+            <span class="optional-label">OPTIONAL IN THIS DEMO</span>
+          </div>
+          <label class="drop-zone" id="dropZone" for="photoInput" tabindex="0">
+            <input id="photoInput" type="file" accept="image/*" hidden>
+            <div id="uploadPrompt" class="upload-prompt">
+              <span class="upload-icon" aria-hidden="true">↑</span>
+              <strong>Choose an image</strong>
+              <span>or drag and drop it here</span>
+              <small>PNG, JPG or WEBP · up to 8 MB</small>
+            </div>
+            <img id="imagePreview" class="image-preview" alt="Preview of the selected everyday object" hidden>
+          </label>
+          <button id="removeImageButton" class="text-button" type="button" hidden>Remove image</button>
+        </div>
+
+        <div class="object-card">
+          <div class="card-topline">
+            <div>
+              <h3>Name your object</h3>
+              <p class="muted">The demo uses this to choose a matching example</p>
+            </div>
+            <span class="required-label">REQUIRED</span>
+          </div>
+          <label class="field-label" for="objectInput">Everyday object</label>
+          <input id="objectInput" class="object-input" type="text" list="objectSuggestions" placeholder="e.g. bicycle, guitar, lamp" autocomplete="off">
+          <datalist id="objectSuggestions">
+            <option value="Bicycle"></option>
+            <option value="Ball"></option>
+            <option value="Guitar"></option>
+            <option value="Lamp"></option>
+            <option value="Headphones"></option>
+            <option value="Skateboard"></option>
+            <option value="Fan"></option>
+          </datalist>
+          <div class="example-block">
+            <span class="field-label">TRY A SAMPLE</span>
+            <div class="sample-list">
+              <button class="sample-chip" type="button" data-object="Bicycle">Bicycle</button>
+              <button class="sample-chip" type="button" data-object="Guitar">Guitar</button>
+              <button class="sample-chip" type="button" data-object="Lamp">Lamp</button>
+              <button class="sample-chip" type="button" data-object="Ball">Ball</button>
+            </div>
+          </div>
+          <button id="analyzeButton" class="primary-button" type="button">
+            Explore this object <span aria-hidden="true">→</span>
+          </button>
+          <p id="inputMessage" class="input-message" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultsSection" class="results-section" aria-labelledby="resultsHeading" hidden>
+      <div class="section-heading results-heading">
+        <div>
+          <p class="eyebrow">STEP 02 · DISCOVER CONNECTIONS</p>
+          <h2 id="resultsHeading">The Physics behind your object</h2>
+          <p id="resultsSubheading" class="muted"></p>
+        </div>
+        <span class="step-count">02 <span>/</span> 03</span>
+      </div>
+
+      <div class="discovery-layout">
+        <aside class="concept-sidebar">
+          <p class="sidebar-label">EXPLORE A CONCEPT</p>
+          <div id="conceptList" class="concept-list" aria-label="Physics concepts"></div>
+          <div class="sidebar-tip"><span aria-hidden="true">✦</span><p>Choose a concept to see how it connects to the object.</p></div>
+        </aside>
+
+        <div class="concept-content">
+          <div class="concept-kicker" id="conceptCategory">PHYSICS CONCEPT</div>
+          <h3 id="conceptTitle">Select a concept</h3>
+          <p id="conceptExplanation" class="concept-explanation"></p>
+          <div class="real-world-box">
+            <span class="box-icon" aria-hidden="true">◎</span>
+            <div>
+              <strong>Where can you see this?</strong>
+              <p id="conceptConnection"></p>
+            </div>
+          </div>
+
+          <div class="challenge-card">
+            <div class="challenge-heading">
+              <div>
+                <p class="eyebrow">STEP 03 · THINK LIKE A SCIENTIST</p>
+                <h4>Make a prediction</h4>
+              </div>
+              <span class="challenge-icon" aria-hidden="true">?</span>
+            </div>
+            <p id="questionPrompt" class="question-prompt"></p>
+            <div id="answerOptions" class="answer-options"></div>
+            <button id="checkAnswerButton" class="secondary-button" type="button" disabled>Check my answer</button>
+            <div id="feedbackBox" class="feedback-box" aria-live="polite" hidden></div>
+          </div>
+
+          <div class="explore-next" id="exploreNext" hidden>
+            <span class="next-icon" aria-hidden="true">↗</span>
+            <div>
+              <strong>Go one step further</strong>
+              <p id="challengeText"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="results-actions">
+        <button id="resetButton" class="text-button" type="button">← Explore another object</button>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>AI SCIENCE LAB</span>
+      <span>Learn by observing the world around you.</span>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
